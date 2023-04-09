@@ -12,7 +12,7 @@ class Evaluator(object):
         self.category_topk = category_topk
         self.attr_topk = attr_topk
         self.reset()
-        with open(const.base_path + 'Anno/list_attr_cloth.txt') as f:
+        with open(const.base_path + 'Anno_coarse/list_attr_cloth.txt') as f:
             ret = []
             f.readline()
             f.readline()

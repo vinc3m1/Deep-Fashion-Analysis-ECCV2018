@@ -49,7 +49,7 @@ class Evaluator(object):
 
             res = []
             for k in self.category_topk:
-                correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+                correct_k = correct[:k].contiguous().view(-1).float().sum(0, keepdim=True)
                 res.append(correct_k.mul_(100 / batch_size))
             for i in range(len(res)):
                 res[i] = res[i].cpu().numpy()[0] / 100

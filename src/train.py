@@ -15,13 +15,15 @@ if __name__ == '__main__':
     if os.path.exists('models') is False:
         os.makedirs('models')
 
+    torch.backends.cudnn.benchmark = True
+
     df = pd.read_csv(base_path + const.USE_CSV)
     train_df = df[df['evaluation_status'] == 'train']
     train_dataset = DeepFashionCAPDataset(train_df, mode=const.DATASET_PROC_METHOD_TRAIN)
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=const.BATCH_SIZE, shuffle=True, num_workers=4)
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=const.BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)
     val_df = df[df['evaluation_status'] == 'test']
     val_dataset = DeepFashionCAPDataset(val_df, mode=const.DATASET_PROC_METHOD_VAL)
-    val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=const.VAL_BATCH_SIZE, shuffle=False, num_workers=4)
+    val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=const.VAL_BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)
     val_step = len(val_dataloader)
 
     net = const.USE_NET()
@@ -44,7 +46,7 @@ if __name__ == '__main__':
             output = net(sample)
             loss = net.cal_loss(sample, output)
 
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
             loss['all'].backward()
             optimizer.step()
 

@@ -2,6 +2,7 @@ import torch
 import torch.utils.data
 from src.const import base_path
 import numpy as np
+import numpy.matlib as matlib
 from torchvision import transforms
 import matplotlib.pyplot as plt
 from skimage import io, transform
@@ -11,12 +12,12 @@ from src import const
 def gaussian_map(image_w, image_h, center_x, center_y, R):
     Gauss_map = np.zeros((image_h, image_w))
 
-    mask_x = np.matlib.repmat(center_x, image_h, image_w)
-    mask_y = np.matlib.repmat(center_y, image_h, image_w)
+    mask_x = matlib.repmat(center_x, image_h, image_w)
+    mask_y = matlib.repmat(center_y, image_h, image_w)
     x1 = np.arange(image_w)
-    x_map = np.matlib.repmat(x1, image_h, 1)
+    x_map = matlib.repmat(x1, image_h, 1)
     y1 = np.arange(image_h)
-    y_map = np.matlib.repmat(y1, image_w, 1)
+    y_map = matlib.repmat(y1, image_w, 1)
     y_map = np.transpose(y_map)
     Gauss_map = np.sqrt((x_map - mask_x)**2 + (y_map - mask_y)**2)
     Gauss_map = np.exp(-0.5 * Gauss_map / R)

@@ -65,7 +65,7 @@ class WholeNetwork(ModuleWithAttr):
         attr_output = self.attr_fc1(feature)
         attr_output = F.relu(attr_output)
         attr_output = self.attr_fc2(attr_output)
-        attr_output = attr_output.reshape(attr_output.size()[0], 2, attr_output.size()[1] / 2)  # [batch_size, 2, 1000]
+        attr_output = attr_output.reshape(attr_output.size()[0], 2, int(attr_output.size()[1] / 2))  # [batch_size, 2, 1000]
         output = {}
         output['category_output'] = category_output
         output['attr_output'] = attr_output

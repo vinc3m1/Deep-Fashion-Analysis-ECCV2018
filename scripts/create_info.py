@@ -8,14 +8,14 @@ from src.const import base_path
 partition = pd.read_csv(base_path + 'Eval/list_eval_partition.txt', skiprows=1, sep='\s+')
 
 category = pd.read_csv(
-    base_path + 'Anno/list_category_img.txt', skiprows=1, sep='\s+')
+    base_path + 'Anno_coarse/list_category_img.txt', skiprows=1, sep='\s+')
 category_type = pd.read_csv(
-    base_path + 'Anno/list_category_cloth.txt', skiprows=1, sep='\s+')
+    base_path + 'Anno_coarse/list_category_cloth.txt', skiprows=1, sep='\s+')
 category_type['category_label'] = range(1, len(category_type) + 1)
 category = pd.merge(category, category_type, on='category_label')
 
 # parse landmarks
-with open(base_path + 'Anno/list_landmarks.txt') as f:
+with open(base_path + 'Anno_coarse/list_landmarks.txt') as f:
     f.readline()
     f.readline()
     values = []
@@ -91,11 +91,11 @@ name.extend([
 landmarks = pd.DataFrame(values, columns=name)
 
 # attribute
-attr = pd.read_csv(base_path + 'Anno/list_attr_img.txt', skiprows=2, sep='\s+', names=['image_name'] + ['attr_%d' % i for i in range(1000)])
+attr = pd.read_csv(base_path + 'Anno_coarse/list_attr_img.txt', skiprows=2, sep='\s+', names=['image_name'] + ['attr_%d' % i for i in range(1000)])
 attr.replace(-1, 0, inplace=True)
 
 # bbox
-bbox = pd.read_csv(base_path + 'Anno/list_bbox.txt', skiprows=1, sep='\s+')
+bbox = pd.read_csv(base_path + 'Anno_coarse/list_bbox.txt', skiprows=1, sep='\s+')
 
 # merge all information
 assert (category['category_type'] == landmarks['clothes_type']).all()

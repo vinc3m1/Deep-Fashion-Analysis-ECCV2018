@@ -7,6 +7,7 @@ from src import const
 from src.utils import parse_args_and_merge_const
 from tensorboardX import SummaryWriter
 import os
+import time
 
 
 if __name__ == '__main__':
@@ -31,6 +32,7 @@ if __name__ == '__main__':
 
     writer = SummaryWriter(const.TRAIN_DIR)
 
+    start = time.perf_counter()
     total_step = len(train_dataloader)
     step = 0
     for epoch in range(const.NUM_EPOCH):
@@ -61,8 +63,10 @@ if __name__ == '__main__':
                     writer.add_scalar('loss_weighted/lm_pos_loss', loss['weighted_lm_pos_loss'], step)
                 writer.add_scalar('loss_weighted/all', loss['all'], step)
                 writer.add_scalar('global/learning_rate', learning_rate, step)
-                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
-                      .format(epoch + 1, const.NUM_EPOCH, i + 1, total_step, loss['all'].item()))
+                now = time.perf_counter()
+                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Time (s): {:.3f}'
+                      .format(epoch + 1, const.NUM_EPOCH, i + 1, total_step, loss['all'].item(), now - start))
+                start = now
             if (i + 1) % 10000 == 0:
                 print('Saving Model....')
                 net.set_buffer('step', step)

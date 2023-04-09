@@ -185,7 +185,7 @@ class VGG16Extractor(nn.Module):
             '29': 'conv5_3',  # [batch_size, 512, 14, 14]
             '30': 'pooled_5',  # [batch_size , 512, 7, 7]
         }
-        self.vgg = torchvision.models.vgg16(pretrained=True).features
+        self.vgg = torchvision.models.vgg16(weights=torchvision.models.VGG16_Weights.IMAGENET1K_V1).features
 
     def forward(self, x):
         ret = {}

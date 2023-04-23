@@ -43,17 +43,17 @@ class LandmarkBranchUpsample(nn.Module):
         batch_size, _, pred_h, pred_w = lm_pos_map.size()
         lm_pos_reshaped = lm_pos_map.reshape(batch_size, 8, -1)
         # y is height，x is width
-        lm_pos_y, lm_pos_x = np.unravel_index(torch.argmax(lm_pos_reshaped, dim=2).cpu(), (pred_h, pred_w))
-        lm_pos_output = np.stack([lm_pos_x / (pred_w - 1), lm_pos_y / (pred_h - 1)], axis=2)
+        # lm_pos_y, lm_pos_x = np.unravel_index(torch.argmax(lm_pos_reshaped, dim=2).cpu(), (pred_h, pred_w))
+        # lm_pos_output = np.stack([lm_pos_x / (pred_w - 1), lm_pos_y / (pred_h - 1)], axis=2)
 
         # # alternate? https://github.com/pytorch/pytorch/issues/35674#issuecomment-739560051
-        # indices = torch.argmax(lm_pos_reshaped, dim=2)
-        # coord = []
-        # for dim in reversed((pred_h, pred_w)):
-        #     coord.append(indices % dim)
-        #     indices = indices // dim
+        indices = torch.argmax(lm_pos_reshaped, dim=2)
+        coord = []
+        for dim in reversed((pred_h, pred_w)):
+            coord.append(indices % dim)
+            indices = indices // dim
         
-        # lm_pos_output = torch.stack(coord[::-1], dim=2)
+        lm_pos_output = torch.stack(coord[::-1], dim=2)
 
         return lm_pos_map, lm_pos_output
 

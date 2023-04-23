@@ -103,14 +103,14 @@ class Evaluator(object):
             mask_key = 'landmark_vis'
         landmark_vis_count = sample[mask_key].cpu().numpy().sum(axis=0)
         landmark_vis_float = torch.unsqueeze(sample[mask_key].float(), dim=2)
-        landmark_vis_float = torch.cat([landmark_vis_float, landmark_vis_float], dim=2).cpu().detach().numpy()
+        landmark_vis_float = torch.cat([landmark_vis_float, landmark_vis_float], dim=2).detach()
 
-        landmark_dist = np.sum(np.sqrt(np.sum(np.square(
-            landmark_vis_float * output['lm_pos_output'] - landmark_vis_float * sample['landmark_pos_normalized'].cpu().numpy(),
+        landmark_dist = torch.sum(torch.sqrt(torch.sum(torch.square(
+            landmark_vis_float * output['lm_pos_output'] - landmark_vis_float * sample['landmark_pos_normalized'],
         ), axis=2)), axis=0)
 
         self.lm_vis_count_all += landmark_vis_count
-        self.lm_dist_all += landmark_dist
+        self.lm_dist_all += landmark_dist.cpu().numpy()
 
     def add(self, output, sample):
         self.category_topk_accuracy(output['category_output'], sample['category_label'])
